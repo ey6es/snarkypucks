@@ -1,0 +1,10 @@
+It's time to make your move in Snarky Pucks!
+
+<% if @player.facebook? %>
+https://apps.facebook.com/<%= Rails.configuration.x.fb_app_name %>
+<% else %>
+<%= root_url %>
+<% end %>
+
+You can disable these notifications in the Preferences menu.
+

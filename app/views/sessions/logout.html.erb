@@ -1,0 +1,7 @@
+<%= content_tag "div", id: "fb-root", "app-id" => Rails.configuration.x.fb_app_id,
+  "logged-in" => @player.facebook?, logout: true do %>
+<% end %>
+
+Thanks for playing!
+
+<div id="fb-status"></div>

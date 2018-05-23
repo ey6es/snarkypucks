@@ -1,0 +1,63 @@
+Power-ups/"actions"
+  - "Push": to sides
+  - "Scatter": random bump to all
+  - "Slowdown": reduce all moves temporarily
+  - "Trap"?: Banana peel (-tint) (stops puck?)
+  
+(Some) actions on last move
+
+"Back" buttons when performing turn (plus breadcrumb links)
+
+"Boost" walls
+
+
+LATER
+
+Other prompt types:
+  Open-ended questions (perhaps with special codes for random players: "what is {player}'s porn star name?")
+    - Mad-Libs with personal (group) nouns, etc.
+    
+Make survey for feedback
+
+Arena mode
+  - Shooting?
+  - Reach goal points/pass through hoops
+  - Bounce ball into goals
+  - Capture territory
+
+Continuous play mode?
+  - No pucks
+  - Rating within clique (Snarky Cliques/Clicks)
+  - See votes even without logging in that day
+  
+Bonus points for matching players to answers (?)
+
+Review answers/gameplay 
+
+Turn replays/share on Facebook?
+
+Reuse prompts, making sure that any given member doesn't see the same one
+
+Friends-only games
+
+"Splash screen" with logo, etc. (small/large based on window size?)
+
+In path: arrow at beginning?
+
+Follow puck if it moves off-screen
+
+Tutorial before login?
+
+Try SVG rendering
+
+Cache track parts as bitmaps?
+
+Save features for path segments to allow path editing across sessions
+
+Path adjustments
+
+(Option for) rotating player choosing rather than voting?
+
+Size prompt iframe based on window size
+
+Late joiners? (no)

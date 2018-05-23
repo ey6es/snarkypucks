@@ -1,0 +1,36 @@
+// Place all the styles related to the Tracks controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#playfield.editor {
+  position: relative;
+  float: left;
+  outline-style: solid;
+  outline-color: black;
+  margin: 10px;
+}
+
+#overlay-layer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 1;
+}
+
+#toolbox {
+  float: left;
+  margin: 10px;
+}
+
+#tool-options {
+  margin: 10px;
+}
+
+#settings {
+  clear: left;
+  margin: 10px;
+}
+
+#grid-spacing {
+  width: 3em;
+}

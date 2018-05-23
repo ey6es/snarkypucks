@@ -1,0 +1,40 @@
+<%= link_to("Create New Track", tracks_path, method: :post) %><br><br>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Creator</th>
+    <th>Created</th>
+    <th>Modified</th>
+    <th>Actions</th>
+  </tr>
+  
+  <% @revisions.each do |revision| %>
+    <tr>
+      <td><%= revision.track.id %></td>
+      <td><%= revision.name %></td>
+      <td><%= revision.track.creator.name %></td>
+      <td><%= revision.track.created_at %></td>
+      <td><%= revision.updated_at %></td>
+      <td>
+        <%= link_to("Edit", revision.track) %>
+        <%= link_to_if(revision.track.published_revision_id, "Unpublish",
+          unpublish_track_path(revision.track), method: :post) %>
+        <%= link_to("Delete", revision.track, method: :delete,
+          data: { confirm: "Really delete #{revision.name}?" }) %>
+      </td>
+    </tr>
+  <% end %>
+  
+</table><br>
+
+<%= link_to_unless(@offset == 0, "First", offset: 0) %>
+<%= link_to_unless(@offset == 0, "Previous", offset: @offset - @limit) %>
+<%= "#{@offset}-#{@offset + @revisions.length - 1} of #{@count}" %>
+<%= link_to_unless(@offset + @limit >= @count, "Next", offset: @offset + @limit) %>
+<%= link_to_unless(@offset + @limit >= @count, "End", offset: @count - @limit) %>
+
+<br><br>
+
+<%= flash[:notice] %>

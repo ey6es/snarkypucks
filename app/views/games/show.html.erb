@@ -1,0 +1,100 @@
+<%= form_for @game do |f| %>
+  <%= f.label :title %>:
+  <%= f.text_field :title %><br>
+
+  <%= f.label :track %>:
+  <select name="game[track_revision]">
+    <% @published_tracks.each do |track| %>
+      <option value="<%= track.published_revision.id %>" <%= "selected='selected'" if @game.track_revision ==
+        track.published_revision %> ><%= track.published_revision.name %></option>
+    <% end %>
+  </select><br>
+
+  <%= f.label :turn_interval %>:
+  <select name="game[turn_interval]">
+    <option value="daily" <%= "selected='selected'" if @game.turn_interval ==
+      24 * Game::MINUTES_PER_HOUR %> >Daily</option>
+    <option value="twice-daily" <%= "selected='selected'" if @game.turn_interval ==
+      12 * Game::MINUTES_PER_HOUR %> >Twice Daily</option>
+  </select><br>
+  
+  <%= f.label :early_turns, "Allow early turns" %>:
+  <%= f.check_box :early_turns %><br>
+
+  <%= f.label :moves_per_turn, "Moves per Turn" %>:
+  <%= f.number_field :moves_per_turn, min: 1 %><br>
+
+  <%= f.label :move_distance, "Move Distance" %>:
+  <%= f.number_field :move_distance, min: 100 %><br>
+  
+  <%= f.label :prompts_per_turn, "Prompts per Turn" %>:
+  <%= f.number_field :prompts_per_turn, min: 0 %><br>
+
+  <%= f.label :min_players, "Min. Players" %>:
+  <%= f.number_field :min_players, min: Game::MIN_MIN_PLAYERS, max: Game::MAX_MAX_PLAYERS %><br>
+  
+  <%= f.label :max_players, "Max. Players" %>:
+  <%= f.number_field :max_players, min: Game::MIN_MIN_PLAYERS, max: Game::MAX_MAX_PLAYERS %><br>
+  
+  <%= f.label :open_to %>:
+  <select name="game[open_to]">
+    <option value="all" <%= "selected='selected'" if @game.open_to_all %> >All</option>
+    <option value="friends" <%= "selected='selected'" if @game.open_to_friends && !@game.open_to_all %> >Friends</option>
+    <option value="invite-only" <%= "selected='selected'" if !@game.open_to_friends &&
+      !@game.open_to_all %> >Invite-Only</option>
+  </select><br><br>
+  
+  <%= f.submit %>
+<% end %><br><br>
+
+<% if @game.id %>
+  Players:
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Joined</th>
+      <th>Actions</th>
+    </tr>
+    
+    <% @game.game_members.each do |game_member| %>
+      <tr>
+        <td><%= game_member.player.id %></td>
+        <td><%= game_member.player.name %></td>
+        <td><%= game_member.created_at %></td>
+        <td>
+          <%= link_to("Remove", remove_game_member_path(@game, player_id: game_member.player.id), method: :post,
+            data: { confirm: "Really remove player?" }) %>
+        </td>
+      </tr>
+    <% end %>
+  </table><br>
+
+  <%= link_to("Invite Player", new_game_invite_path(@game)) %><br><br>
+
+  Invites:
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Sender</th>
+      <th>Sent</th>
+      <th>Actions</th>
+    </tr>
+    
+    <% @game.game_invites.each do |game_invite| %>
+      <tr>
+        <td><%= game_invite.player.id %></td>
+        <td><%= game_invite.player.name %></td>
+        <td><%= game_invite.sender.name %></td>
+        <td><%= game_invite.created_at %></td>
+        <td>
+          <%= link_to("Rescind", rescind_game_invite_path(@game, player_id: game_invite.player.id), method: :post,
+            data: { confirm: "Really rescind invite?" }) %>
+        </td>
+      </tr>
+    <% end %>
+  </table><br><br>
+<% end %>
+
+<%= flash[:notice] %>

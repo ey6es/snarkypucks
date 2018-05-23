@@ -1,0 +1,130 @@
+// Place all the styles related to the games controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.modal-header {
+  background-color: #5cb85c;
+  color: white;
+  text-align: center;
+}
+
+.centered {
+  text-align: center;
+}
+
+.tight {
+  line-height: 70%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.left-aligned {
+  float: left;
+}
+
+.breadcrumbs {
+  padding: 0px;
+  margin: 0px;
+  font-size: 75%;
+  position: relative;
+  left: -4px;
+  
+  .tutorial {
+    left: 0px;
+  }
+}
+
+.future {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#move-counter {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 24px;
+  vertical-align: bottom;
+  position: absolute;
+  bottom: 0;
+  margin: 11px 8px;
+}
+
+.button-wrap {
+  white-space: normal !important;
+}
+
+#playfield.app {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+}
+
+#prompt-container {
+  position: relative;
+}
+
+#responses {
+  position: absolute;
+  background-color: #FFFFFF;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  display: none;
+  overflow: auto;
+}
+
+@mixin bottom-left {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+}
+
+@mixin bottom-right {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+
+.loading-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#popover-target {
+  position: absolute;
+  display: none;
+  z-index: -1;
+}
+
+#control-left {
+  padding: 10px;
+  text-align: center;
+  display: none;
+  z-index: 2;
+  @include bottom-left;
+}
+
+#control {
+  padding: 10px;
+  text-align: center;
+  display: none;
+  z-index: 2;
+  @include bottom-right;
+}
+
+#control-top-right {
+  padding: 10px;
+  text-align: center;
+  display: none;
+  z-index: 2;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}

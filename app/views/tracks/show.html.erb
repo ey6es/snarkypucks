@@ -1,0 +1,40 @@
+<%= content_tag "div", id: :editor, "track-path" => track_path(@track_id, format: :json),
+  "publish-path" => publish_track_path(@track_id, format: :json),
+  "revision-path" => track_revision_path(0, format: :json),
+  "export-path" => export_track_path(format: :json),
+  "import-path" => track_path(@track_id) do %>
+
+  <div id="editor-top">
+  
+    <div id="playfield" class="editor">
+      <canvas id="base-layer" width="1024" height="768"></canvas>
+      <canvas id="overlay-layer" width="1024" height="768"></canvas>
+    </div>
+    
+    <div id="toolbox">
+      Tool: <select id="tool"></select><br>
+      <div id="tool-options"></div>
+    </div>
+
+  </div>
+
+  <div id="settings">
+    <input id="snap-to-grid" type="checkbox"></input>Snap to Grid &nbsp&nbsp
+    Feature Snap: <select id="feature-snap">
+      <option value="none" selected="selected">None</option>
+      <option value="vertices">Vertices</option>
+      <option value="vertices-edges">Vertices/Edges</option>
+    </select>  &nbsp&nbsp
+    <button id="undo" disabled="disabled">Undo</button>
+    <button id="redo" disabled="disabled">Redo</button>  &nbsp&nbsp
+    <button id="cut" disabled="disabled">Cut</button>
+    <button id="copy" disabled="disabled">Copy</button> 
+    <button id="paste" disabled="disabled">Paste</button>
+    <button id="delete" disabled="disabled">Delete</button> 
+  </div>
+
+<% end %>
+
+<div id="status">
+  <%= flash[:notice] %>
+</div>

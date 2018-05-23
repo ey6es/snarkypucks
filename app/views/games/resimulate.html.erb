@@ -1,0 +1,10 @@
+<%= content_tag "div", id: :resimulation, track: @game.track_revision.data, results: @game.results,
+  "player-id" => params[:player_id] do %>
+
+  <div id="playfield" class="app">
+    <canvas id="base-layer"></canvas>
+    <canvas id="overlay-layer"></canvas>
+  </div>
+
+<% end %>
+

@@ -1,0 +1,11 @@
+<%= form_for :invite do |f| %>
+  <%= f.label :email %>:
+  <%= f.email_field :email %><br>
+
+  <%= f.label :message %>:
+  <%= f.text_field :message %><br>
+
+  <%= f.submit "Send Player Invite" %>
+<% end %><br><br>
+
+<%= flash[:notice] %>

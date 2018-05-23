@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  track_revision_id: 
+  turn_interval: 1
+  early_turns: false
+  min_players: 1
+  max_players: 1
+  open_to_all: false
+  open_to_friends: false
+  update: MyText
+
+two:
+  title: MyString
+  track_revision_id: 
+  turn_interval: 1
+  early_turns: false
+  min_players: 1
+  max_players: 1
+  open_to_all: false
+  open_to_friends: false
+  update: MyText

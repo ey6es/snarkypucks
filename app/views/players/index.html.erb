@@ -1,0 +1,39 @@
+<%= link_to("Invite Player", player_invite_path) %><br><br>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Admin</th>
+    <th>Joined</th>
+    <th>Actions</th>
+  </tr>
+  
+  <% @players.each do |player| %>
+    <tr>
+      <td><%= player.id %></td>
+      <td><%= player.name %></td>
+      <td><%= player.email %></td>
+      <td><%= player.admin %></td>
+      <td><%= player.created_at %></td>
+      <td>
+        <%= link_to("Login As", login_as_path(player)) %>
+        <%= link_to("Edit", player) %>
+        <%= link_to_unless(player.id == @player.id, "Delete", player, method: :delete,
+          data: { confirm: "Really delete #{player.name}?" }) %>
+      </td>
+    </tr>
+  <% end %>
+  
+</table><br>
+
+<%= link_to_unless(@offset == 0, "First", offset: 0) %>
+<%= link_to_unless(@offset == 0, "Previous", offset: [ @offset - @limit, 0 ].max) %>
+<%= "#{@offset}-#{@offset + @players.length - 1} of #{@count}" %>
+<%= link_to_unless(@offset + @limit >= @count, "Next", offset: @offset + @limit) %>
+<%= link_to_unless(@offset + @limit >= @count, "End", offset: @count - @limit) %>
+
+<br><br>
+
+<%= flash[:notice] %>

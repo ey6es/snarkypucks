@@ -1,0 +1,6 @@
+Current
+
+- Puck starting positions randomized.
+- Added slow motion option for replays.
+- Added option to replay last turn to joined game menu.
+- Changed "Show Leaderboard" to "Next >"

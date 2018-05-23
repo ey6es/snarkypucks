@@ -1,0 +1,38 @@
+<%= link_to("Create New Game", new_game_path) %><br><br>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Members</th>
+    <th>Created</th>
+    <th>Actions</th>
+  </tr>
+  
+  <% @games.each do |game| %>
+    <tr>
+      <td><%= game.id %></td>
+      <td><%= game.title %></td>
+      <td><%= game.game_members.count %></td>
+      <td><%= game.created_at %></td>
+      <td>
+        <%= link_to_unless(game.players.exists?(@player.id), "Join", join_game_path(game), method: :post) %>
+        <%= link_to_if(game.players.exists?(@player.id), "Leave", leave_game_path(game), method: :post) %>
+        <%= link_to("Edit", game) %>
+        <%= link_to("Delete", game, method: :delete,
+          data: { confirm: "Really delete game?" }) %>
+      </td>
+    </tr>
+  <% end %>
+  
+</table><br>
+
+<%= link_to_unless(@offset == 0, "First", offset: 0) %>
+<%= link_to_unless(@offset == 0, "Previous", offset: @offset - @limit) %>
+<%= "#{@offset}-#{@offset + @games.length - 1} of #{@count}" %>
+<%= link_to_unless(@offset + @limit >= @count, "Next", offset: @offset + @limit) %>
+<%= link_to_unless(@offset + @limit >= @count, "End", offset: @count - @limit) %>
+
+<br><br>
+
+<%= flash[:notice] %>

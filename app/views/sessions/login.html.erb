@@ -1,0 +1,26 @@
+<%= content_tag "div", id: "fb-root", "app-id" => Rails.configuration.x.fb_app_id, login: true do %>
+<% end %>
+
+<%= form_for :credentials, html: { id: "login-form" } do |f| %>
+  <%= f.label :email %>:
+  <%= f.email_field :email %><br>
+
+  <%= f.label :password %>:
+  <%= f.password_field :password %><br>
+
+  <%= f.label :stay_logged_in %>:
+  <%= f.check_box :stay_logged_in %><br>
+
+  <%= f.hidden_field :fb_token, id: "fb-token" %>
+
+  <%= f.submit "Login" %>
+<% end %><br><br>
+
+<div class="fb-login-button" scope="public_profile,email,user_friends" data-max-rows="1"
+  data-size="xlarge" data-show-faces="true" data-auto-logout-link="false"></div><br><br>
+
+<%= link_to_if(Rails.configuration.x.allow_account_creation, "Create Account", new_player_path) %><br>
+
+<%= link_to("Forgot Password?", password_reset_path) %><br><br>
+
+<%= flash[:notice] %>

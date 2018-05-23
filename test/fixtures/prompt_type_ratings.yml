@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  player_id: 
+  prompt_type: MyString
+  value: 1
+  total: 1
+
+two:
+  player_id: 
+  prompt_type: MyString
+  value: 1
+  total: 1

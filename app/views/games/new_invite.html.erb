@@ -1,0 +1,25 @@
+<%= content_tag "div", id: "fb-root", "app-id" => Rails.configuration.x.fb_app_id, "logged-in" => @player.facebook? do %>
+<% end %>
+
+<%= form_for GameInvite.new do |f| %>
+  <%= f.label :name %>:
+  <input type="text" name="game_invite[name]"/><br>
+  
+  or<br>
+  
+  <%= f.label :email %>:
+  <input type="email" name="game_invite[email]"/<br><br>
+  
+  <%= f.label :message %>:
+  <%= f.text_field :message %><br><br>
+
+  <input id="fb-response" type="hidden" name="game_invite[fb_response]"/>
+
+  <%= f.submit %>
+<% end %><br><br>
+
+<% if @player.facebook? %>
+  <button id="facebook-invite" disabled="disabled">Facebook Invite</button><br><br>
+<% end %>
+
+<%= flash[:notice] %>

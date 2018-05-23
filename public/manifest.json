@@ -1,0 +1,16 @@
+{
+  "name": "Snarky Pucks",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "density": 4.0
+    }
+  ],
+  "start_url": "/app",
+  "display": "standalone",
+  "orientation": "portrait",
+  "gcm_sender_id": "648519739035",  
+  "gcm_user_visible_only": true
+}

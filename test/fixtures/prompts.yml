@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  inline_url: MyString
+  full_url: MyString
+  content: MyText
+  game_id: 
+
+two:
+  type: 
+  inline_url: MyString
+  full_url: MyString
+  content: MyText
+  game_id: 

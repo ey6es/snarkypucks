@@ -1,0 +1,3 @@
+rsync -vr --exclude='**/.git/' --exclude='/log/*' --exclude='**/.keep' --exclude='/tmp/*' --exclude='/db/*.sqlite3' \
+  /export/balls/ www.fungibleinsight.com:/export/balls/
+ssh www.fungibleinsight.com "export RAILS_ENV=production;cd /export/balls;./bin/rake db:migrate;./bin/rake assets:precompile;touch tmp/restart.txt;sudo service delayed_jobs restart"

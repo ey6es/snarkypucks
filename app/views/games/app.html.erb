@@ -1,0 +1,406 @@
+<%= content_tag "div", id: "fb-root", "app-id" => Rails.configuration.x.fb_app_id do %>
+<% end %>
+
+<%= content_tag "div", id: :canvas, canvas: @canvas,
+  "test-cookie" => @test_cookie,
+  "login-path" => login_path(format: :json),
+  "fb-login-redirect-url" => fb_login_redirect_url,
+  "logout-path" => logout_path(format: :json),
+  "players-path" => players_path(format: :json),
+  "password-reset-path" => password_reset_path(format: :json),
+  "change-password-path" => change_password_path(format: :json),
+  "set-name-path" => set_name_path(format: :json),
+  "preferences-path" => preferences_path(format: :json),
+  "push-endpoint-path" => push_endpoint_path(format: :json),
+  "notices-path" => notices_path(format: :json),
+  "last-turn-path" => last_turn_path(0, format: :json),
+  "complete-tutorial-path" => complete_tutorial_path(format: :json),
+  "game-invite-answer-path" => game_invite_answer_path(format: :json),
+  "revision-path" => track_revision_path(0, format: :json),
+  "game-move-path" => game_move_path(format: :json),
+  "published-tracks-path" => published_tracks_path(format: :json),
+  "games-path" => games_path(format: :json),
+  "joined-games-path" => joined_games_path(format: :json),
+  "open-games-path" => open_games_path(format: :json),
+  "join-game-path" => join_game_path(0, format: :json),
+  "leave-game-path" => leave_game_path(0, format: :json),
+  "game-invites-path" => game_invites_path(0, format: :json),
+  "prompt-rankings-path" => prompt_rankings_path(format: :json),
+  "game-rankings-path" => game_rankings_path(format: :json),
+  "personal-stats-path" => personal_stats_path(format: :json),
+  "logged-in" => (@player != nil),
+  "facebook" => (@player && @player.facebook?),
+  "facebook-email" => !!(@player && @player.fb_email),
+  "name-set" => !!(@player && @player.name),
+  "change-password" => params["change_password"] do %>
+
+  <div id="playfield" class="app">
+    <canvas id="base-layer"></canvas>
+    <canvas id="overlay-layer"></canvas>
+  </div>
+
+<% end %>
+
+<div id="login" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-lock"></span> Login</h4>
+      </div>
+      <div class="modal-body">
+        Log in with Facebook:<br><br>
+        <div class="fb-login-button" scope="public_profile,email,user_friends" data-max-rows="1"
+          data-size="xlarge" data-auto-logout-link="false"></div>
+        <br><br>or:<br><br>
+        <div class="form-group">
+          <label for="email"><span class="glyphicon glyphicon-user"></span> Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter email...">
+        </div>
+        <div class="form-group">
+          <label for="password"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter password...">
+        </div>
+        <div class="checkbox">
+          <label><input id="remember-me" type="checkbox" checked="checked">Remember me</label>
+        </div>
+        <button id="login-button" class="btn btn-default btn-success btn-block" disabled="disabled">Login</button><br>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <% if Rails.configuration.x.allow_account_creation %>
+          <button id="create-account-button" class="btn btn-success">Create Account</button>
+        <% end %>
+        <button id="forgot-password-button" class="btn btn-success">Forgot Password?</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="create-account" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-lock"></span> Create Account</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="name"><span class="glyphicon glyphicon-user"></span> Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Enter your name...">
+        </div>
+        <div class="form-group">
+          <label for="email"><span class="glyphicon glyphicon-user"></span> Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter email...">
+        </div>
+        <div class="form-group">
+          <label for="password"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter password...">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password"><span class="glyphicon glyphicon-eye-open"></span> Confirm Password</label>
+          <input type="password" class="form-control" id="confirm-password" placeholder="Enter password again...">
+        </div>
+        <button id="create-account-button" class="btn btn-default btn-success btn-block" disabled="disabled">Create
+          Account</button><br>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="login-button" class="btn btn-success">Back to Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="forgot-password" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-lock"></span> Password Reset</h4>
+      </div>
+      <div class="modal-body">
+        Enter your email address below.  If we have it on file, we'll send you a password reset link.<br><br>
+        <div class="form-group">
+          <label for="email"><span class="glyphicon glyphicon-user"></span> Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter email...">
+        </div>
+        <button id="send-reset-email" class="btn btn-default btn-success btn-block" disabled="disabled">Send
+          Reset Email</button><br>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="login-button" class="btn btn-success">Back to Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="change-password" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-lock"></span> Change Password</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="password"><span class="glyphicon glyphicon-eye-open"></span> New Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter password...">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password"><span class="glyphicon glyphicon-eye-open"></span> Confirm New Password</label>
+          <input type="password" class="form-control" id="confirm-password" placeholder="Enter password again...">
+        </div>
+        <button id="change-password-button" class="btn btn-default btn-success btn-block" disabled="disabled">Change
+          Password</button><br>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="set-name" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-lock"></span> Configure Account</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="name"><span class="glyphicon glyphicon-user"></span> Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Enter your name...">
+        </div>
+        <div class="form-group">
+          <label for="password"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter password...">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password"><span class="glyphicon glyphicon-eye-open"></span> Confirm Password</label>
+          <input type="password" class="form-control" id="confirm-password" placeholder="Enter password again...">
+        </div>
+        <button id="set-name-button" class="btn btn-default btn-success btn-block" disabled="disabled">Configure
+          Account</button><br>
+        <div id="alert-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main-menu" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Snarky Pucks</h4>
+      </div>
+      <div class="modal-body centered tight">
+        <div id="welcome"></div><br>
+        <button id="show-joined-games" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-tasks"></span> Show Joined Games<span id="joined-game-count"></span></button><br>
+        <button id="find-open-games" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-search"></span> Find Open Games<span id="open-game-count"></span></button><br>
+        <button id="create-new-game" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-glass"></span> Create New Game</button><br>
+        <button id="check-notices" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-refresh"></span> Check Notifications</button><br>
+        <button id="view-rankings" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-star"></span> View Rankings</button><br>
+        <button id="tutorial" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-film"></span> Show Tutorial</button><br>
+        <button id="set-preferences" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-cog"></span> Preferences</button><br>
+        <button id="logout" class="btn btn-success btn-block">
+          <span class="glyphicon glyphicon-leaf"></span> Logout</button>
+      </div>
+      <div class="modal-footer small">
+        Copyright &copy; 2015, <a href="http://www.fungibleinsight.com/">Andrzej Kapolka</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="joined-games" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-tasks"></span> Joined Games</h4>
+      </div>
+      <div class="modal-body">
+        <div class="panel-group">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="back-to-main" class="btn btn-success">Back to Main Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="invite-player" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-user"></span> Invite Player</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Enter the player's name...">
+        </div>
+        <div class="form-group">
+          <label for="email">Or Email</label>
+          <input type="text" class="form-control" id="email" placeholder="...OR their email address...">
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <input type="text" class="form-control" id="message" placeholder="Enter an optional message...">
+        </div>
+        <button id="facebook-invite" class="btn btn-default btn-info btn-block">Facebook Invite</button>
+        <button id="send-invite" class="btn btn-default btn-success btn-block">Send Invite</button><br>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="back-to-joined" class="btn btn-success">Back to Joined Games</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="open-games" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-search"></span> Open Games</h4>
+      </div>
+      <div class="modal-body">
+        <div class="panel-group">
+        </div>
+        <div id="alert-container"></div>  
+      </div>
+      <div class="modal-footer">
+        <button id="back-to-main" class="btn btn-success" data-dismiss="modal">Main Menu</button>
+        <button id="back" class="btn btn-success"><span class='glyphicon glyphicon-chevron-left'></span> Back</button>
+        <button id="next" class="btn btn-success">Next <span class='glyphicon glyphicon-chevron-right'></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="new-game" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-glass"></span> New Game</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" id="title" placeholder="Enter an optional title...">
+        </div>
+        <div class="form-group">
+          <label for="track">Track</label>
+          <select class="form-control" id="track">
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="minimum-players">Minimum Players</label>
+          <input type="number" class="form-control" id="minimum-players" min="<%= Game::MIN_MIN_PLAYERS %>"
+            max="<%= Game::MAX_MAX_PLAYERS %>" value="<%= Game::MIN_MIN_PLAYERS %>">
+        </div>
+        <div class="form-group">
+          <label for="maximum-players">Maximum Players</label>
+          <input type="number" class="form-control" id="maximum-players" min="<%= Game::MIN_MIN_PLAYERS %>"
+            max="<%= Game::MAX_MAX_PLAYERS %>" value="<%= Game::MAX_MAX_PLAYERS %>">
+        </div>
+        <div class="form-group">
+          <label for="open-to">Open To</label>
+          <select class="form-control" id="open-to">
+            <option value="all">All</option>
+            <option value="invite-only">Invite-Only</option>
+          </select>
+        </div>
+        <button id="create" class="btn btn-success btn-block">Create</button><br>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="back-to-main" class="btn btn-success">Back to Main Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rankings" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-star"></span> Rankings</h4>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs">
+          <li id="prompts-tab" class="active"><a id="prompts" href="#">Prompts</a></li>
+          <li id="games-tab"><a id="games" href="#">Games</a></li>
+          <li id="personal-stats-tab"><a id="personal-stats" href="#">Personal Stats</a></li>
+        </ul><br>
+        <div id="content"></div>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="back-to-main" class="btn btn-success">Main Menu</button>
+        <button id="back" class="btn btn-success"><span class='glyphicon glyphicon-chevron-left'></span> Back</button>
+        <button id="next" class="btn btn-success">Next <span class='glyphicon glyphicon-chevron-right'></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="preferences" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="glyphicon glyphicon-cog"></span> Preferences</h4>
+      </div>
+      <div class="modal-body centered">
+        <div class="form-group">
+          <div class="checkbox">
+            <label><input id="email-notifications" type="checkbox">Email Turn Reminders</label>
+          </div>
+          <div class="checkbox" id="push-notifications-container">
+            <label><input id="push-notifications" type="checkbox">Push Turn Reminders</label>
+          </div>
+        </div>
+        <div id="alert-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancel" class="btn btn-success">Cancel</button>
+        <button id="ok" class="btn btn-success">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="notice" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+<div id="static-notice" class="modal" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+<div id="loading" class="modal" role="dialog" data-backdrop="static">
+  <image class="loading-image" src="/assets/loading.gif">
+</div>
+
+<div id="popover-target">
+</div>
+
+<div id="control-left"></div>
+<div id="control"></div>
+<div id="control-top-right"></div>
+

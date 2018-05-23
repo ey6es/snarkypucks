@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Delayed jobs daemon script
+
+PIDFILE=$1
+SERVER_PIDFILE=/var/run/delayed_job.pid
+
+termHandler () {
+    if [ -f $SERVER_PIDFILE ]; then
+        kill -INT `cat $SERVER_PIDFILE`
+        wait
+        rm $SERVER_PIDFILE
+    fi
+    exit
+}
+
+trap termHandler TERM
+
+# Start from the base directory
+cd `dirname $0`/..
+
+# Store our pid
+echo $$ > $PIDFILE
+
+while true; do
+    sudo -n -u andrzej RAILS_ENV=production ./bin/delayed_job run &
+    echo $! > $SERVER_PIDFILE
+    wait
+    rm $SERVER_PIDFILE
+done
